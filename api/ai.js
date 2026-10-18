@@ -38,8 +38,8 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Prompt or image is required' });
     }
 
-    // استخدام gemini-2.5-flash مع تفعيل البحث في الويب (Google Search Grounding)
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+    // التحديث إلى أحدث موديل gemini-3.8-flash مع تفعيل البحث في الويب
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
