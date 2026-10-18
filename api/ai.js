@@ -19,7 +19,6 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'GEMINI_API_KEY is missing' });
     }
 
-    // قائمة الموديلات الذكية التي تدعم كافة لغات العالم
     const models = ['gemini-3.8-flash', 'gemini-1.5-flash', 'gemini-2.0-flash'];
     let response = null;
     let data = null;
@@ -51,7 +50,7 @@ export default async function handler(req, res) {
 
       data = await response.json();
       if (response.ok) {
-        break; // إذا نجح الطلب، اخرج من الحلقة
+        break;
       }
     }
 
