@@ -62,7 +62,7 @@ module.exports = async function handler(req, res) {
     contents.push({ role: "user", parts: currentParts });
 
     // تم التحديث إلى الموديل المتوافق مع حسابك الجديد
-    const model = "gemini-2.5-flash";
+    const model = "gemini-3.8-flash";
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey.trim()}`;
 
     const controller = new AbortController();
