@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="auto">
+<html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ASSTRA AI</title>
+  <!-- Marked.js pour afficher le Markdown proprement (Gras, listes, titres) -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
     body { display: flex; height: 100vh; background-color: #f8fafc; color: #1e293b; }
@@ -12,30 +14,30 @@
     .sidebar { width: 280px; background-color: #ffffff; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; padding: 24px; justify-content: space-between; }
     .brand { display: flex; align-items: center; gap: 14px; margin-bottom: 30px; }
     
-    /* Logo Premium ASSTRA AI */
+    /* Logo Sparkle AI Modern */
     .logo-container {
       width: 48px;
       height: 48px;
-      background: linear-gradient(135deg, #7c3aed 0%, #2563eb 50%, #06b6d4 100%);
+      background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
       border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 10px 20px -5px rgba(124, 58, 237, 0.4);
+      box-shadow: 0 10px 25px -5px rgba(168, 85, 247, 0.4);
     }
     .logo-container svg { width: 28px; height: 28px; fill: white; }
 
     .brand h2 { 
       font-size: 22px; 
       font-weight: 800; 
-      background: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%);
+      background: linear-gradient(135deg, #4f46e5 0%, #9333ea 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       letter-spacing: -0.5px;
     }
 
     .btn-new { 
-      background: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%); 
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); 
       color: white; 
       border: none; 
       padding: 14px; 
@@ -47,10 +49,10 @@
       align-items: center; 
       justify-content: center; 
       gap: 10px; 
-      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
       transition: all 0.2s ease;
     }
-    .btn-new:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(124, 58, 237, 0.35); }
+    .btn-new:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(99, 102, 241, 0.35); }
 
     /* Main Area */
     .main { flex: 1; display: flex; flex-direction: column; }
@@ -58,16 +60,16 @@
     .chat-box { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
     
     /* Messages */
-    .msg-wrapper { display: flex; flex-direction: column; max-width: 75%; gap: 6px; }
+    .msg-wrapper { display: flex; flex-direction: column; max-width: 80%; gap: 6px; }
     .msg-wrapper.user { align-self: flex-end; }
     .msg-wrapper.bot { align-self: flex-start; }
 
     .msg { padding: 16px 20px; border-radius: 16px; line-height: 1.6; font-size: 15px; word-break: break-word; }
     .msg-wrapper.user .msg { 
-      background: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%); 
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); 
       color: white; 
       border-bottom-right-radius: 4px;
-      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.15);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
     }
     .msg-wrapper.bot .msg { 
       background-color: #ffffff; 
@@ -77,21 +79,33 @@
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
     }
 
+    /* Markdown Styling inside Bot Message */
+    .msg-wrapper.bot .msg p { margin-bottom: 10px; }
+    .msg-wrapper.bot .msg p:last-child { margin-bottom: 0; }
+    .msg-wrapper.bot .msg ul, .msg-wrapper.bot .msg ol { margin-left: 20px; margin-bottom: 10px; }
+    .msg-wrapper.bot .msg h1, .msg-wrapper.bot .msg h2, .msg-wrapper.bot .msg h3 { margin-top: 10px; margin-bottom: 8px; font-weight: 700; }
+
     .audio-btn {
-      background: transparent;
-      border: none;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 6px 12px;
       cursor: pointer;
-      font-size: 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #475569;
       align-self: flex-start;
-      opacity: 0.7;
-      transition: opacity 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
     }
-    .audio-btn:hover { opacity: 1; }
+    .audio-btn:hover { background: #e2e8f0; color: #1e293b; }
     
     /* Input Area */
     .input-container { padding: 20px 30px; background-color: #ffffff; border-top: 1px solid #e2e8f0; display: flex; gap: 10px; align-items: center; }
     .input-container input { flex: 1; padding: 16px 20px; border: 1.5px solid #cbd5e1; border-radius: 12px; outline: none; font-size: 15px; transition: all 0.2s; }
-    .input-container input:focus { border-color: #7c3aed; box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1); }
+    .input-container input:focus { border-color: #8b5cf6; box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1); }
     
     .icon-btn {
       background: #f1f5f9;
@@ -116,7 +130,7 @@
     }
 
     .send-btn { 
-      background: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%); 
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); 
       color: white; 
       border: none; 
       padding: 0 24px; 
@@ -126,9 +140,9 @@
       font-size: 15px;
       cursor: pointer; 
       transition: all 0.2s;
-      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
     }
-    .send-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(124, 58, 237, 0.3); }
+    .send-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3); }
   </style>
 </head>
 <body>
@@ -137,9 +151,9 @@
     <div>
       <div class="brand">
         <div class="logo-container">
-          <!-- الشعار المطور ASSTRA AI -->
+          <!-- Logo Sparkle AI Futuriste -->
           <svg viewBox="0 0 24 24">
-            <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 14.93V18h-2v-1.07A6 6 0 0 1 6.07 12H5v-2h1.07A6 6 0 0 1 11 5.07V4h2v1.07A6 6 0 0 1 17.93 10H19v2h-1.07A6 6 0 0 1 13 16.93zM12 7a5 5 0 1 0 5 5 5 5 0 0 0-5-5z"/>
+            <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"></path>
           </svg>
         </div>
         <h2>ASSTRA AI</h2>
@@ -149,16 +163,16 @@
   </div>
 
   <div class="main">
-    <div class="header">ASSTRA AI Assistant (Multilingual & Voice Support)</div>
+    <div class="header">ASSTRA AI Assistant</div>
     <div class="chat-box" id="chatBox">
       <div class="msg-wrapper bot">
-        <div class="msg">مرحباً! أنا ASSTRA AI. يمكنك التحدث معي بأي لغة تريدها أو إرسال رسائل صوتية 🎙️.</div>
+        <div class="msg">Bonjour ! Je suis **ASSTRA AI**. Comment puis-je vous aider aujourd'hui ? 🚀</div>
       </div>
     </div>
     <div class="input-container">
-      <button class="icon-btn" id="micBtn" onclick="toggleVoiceInput()" title="إرسال بصوتك">🎙️</button>
-      <input type="text" id="userInput" placeholder="أكتب سؤالك هنا أو تكلم بالميكروفون..." onkeypress="if(event.key==='Enter') sendMessage()" />
-      <button class="send-btn" onclick="sendMessage()">إرسال 🚀</button>
+      <button class="icon-btn" id="micBtn" onclick="toggleVoiceInput()" title="Vocal">🎙️</button>
+      <input type="text" id="userInput" placeholder="Écris ta question ici ou parle au micro..." onkeypress="if(event.key==='Enter') sendMessage()" />
+      <button class="send-btn" onclick="sendMessage()">Envoyer 🚀</button>
     </div>
   </div>
 
@@ -166,7 +180,6 @@
     let recognition;
     let isRecording = false;
 
-    // إعداد التعرف على الصوت
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognition = new SpeechRecognition();
@@ -203,11 +216,12 @@
       if (recognition) recognition.stop();
     }
 
-    // قراءة الرد بصوت عالي
     function speakText(text) {
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(text);
+        // Supprimer le balisage HTML avant la lecture vocale
+        const cleanText = text.replace(/<[^>]*>?/gm, '');
+        const utterance = new SpeechSynthesisUtterance(cleanText);
         window.speechSynthesis.speak(utterance);
       }
     }
@@ -219,7 +233,6 @@
 
       if (!text) return;
 
-      // إدراج رسالة المستخدم
       const userWrapper = document.createElement('div');
       userWrapper.className = 'msg-wrapper user';
       userWrapper.innerHTML = `<div class="msg">${text}</div>`;
@@ -228,10 +241,9 @@
       input.value = '';
       chatBox.scrollTop = chatBox.scrollHeight;
 
-      // رسالة الانتظار
       const botWrapper = document.createElement('div');
       botWrapper.className = 'msg-wrapper bot';
-      botWrapper.innerHTML = `<div class="msg">جاري التفكير...</div>`;
+      botWrapper.innerHTML = `<div class="msg">Réflexion en cours...</div>`;
       chatBox.appendChild(botWrapper);
       chatBox.scrollTop = chatBox.scrollHeight;
 
@@ -243,14 +255,17 @@
         });
 
         const data = await res.json();
-        const replyText = data.reply || ("خطأ: " + (data.error || "تعذر الحصول على إجابة."));
+        const rawReply = data.reply || ("Erreur: " + (data.error || "Impossible de répondre."));
+        
+        // Formater la réponse en Markdown enrichi
+        const formattedReply = marked.parse(rawReply);
 
         botWrapper.innerHTML = `
-          <div class="msg">${replyText}</div>
-          <button class="audio-btn" onclick="speakText(\`${replyText.replace(/`/g, "'")}\`)">🔊 الاستماع للرد</button>
+          <div class="msg">${formattedReply}</div>
+          <button class="audio-btn" onclick="speakText(\`${rawReply.replace(/`/g, "'").replace(/"/g, '&quot;')}\`)">🔊 Écouter la réponse</button>
         `;
       } catch (err) {
-        botWrapper.innerHTML = `<div class="msg">خطأ في الاتصال بالسيرفر.</div>`;
+        botWrapper.innerHTML = `<div class="msg">Erreur de connexion avec le serveur.</div>`;
       }
       
       chatBox.scrollTop = chatBox.scrollHeight;
