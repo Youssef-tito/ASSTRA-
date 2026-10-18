@@ -19,14 +19,21 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'GEMINI_API_KEY is missing' });
     }
 
-    // طلب مستقر ومباشر لـ gemini-3.8-flash
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt || 'Hello' }] }]
+          contents: [
+            {
+              parts: [
+                {
+                  text: `You are ASSTRA AI, a helpful multilingual assistant. Respond to the user in the exact same language they use (Arabic, Tunisian Derja, French, English, Spanish, etc.).\n\nUser Message: ${prompt || 'Hello'}`
+                }
+              ]
+            }
+          ]
         })
       }
     );
