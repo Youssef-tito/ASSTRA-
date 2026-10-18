@@ -2,64 +2,63 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
+  
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
-
+  
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const { prompt } = req.body;
+    const { prompt, image } = req.body;
     const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
       return res.status(500).json({ error: 'GEMINI_API_KEY is missing' });
     }
 
-    const models = ['gemini-3.8-flash', 'gemini-1.5-flash', 'gemini-2.0-flash'];
-    let response = null;
-    let data = null;
-
-    for (const model of models) {
-      response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [
-              {
-                parts: [
-                  {
-                    text: `You are ASSTRA AI, an advanced, professional, and multilingual artificial intelligence assistant. 
-                    - You support and fluently understand EVERY language in the world (Arabic, French, English, Spanish, Chinese, Japanese, Tunisian Derja, etc.).
-                    - Always reply back in the exact same language used by the user in their message.
-                    - Format your response cleanly using Markdown (bold text, bullet points, structured headings) for a premium reading experience.
-
-                    User Message: ${prompt || 'Hello'}`
-                  }
-                ]
-              }
-            ]
-          })
-        }
-      );
-
-      data = await response.json();
-      if (response.ok) {
-        break;
-      }
+    const parts = [];
+    if (prompt) {
+      parts.push({ text: prompt });
     }
 
-    if (!response || !response.ok) {
-      return res.status(500).json({ error: data?.error?.message || 'All Gemini models are busy. Please try again.' });
+    if (image) {
+      const base64Data = image.replace(/^data:image\/[a-z]+;base64,/, '');
+      parts.push({
+        inline_data: {
+          mime_type: "image/jpeg",
+          data: base64Data
+        }
+      });
+    }
+
+    if (parts.length === 0) {
+      return res.status(400).json({ error: 'Prompt or image is required' });
+    }
+
+    // Istitmal gemini-1.5-flash m3a tef3il el baheth fel web (Google Search Grounding)
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: parts }],
+        tools: [{ "google_search": {} }]
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return res.status(response.status).json({ 
+        error: data.error?.message || 'Gemini API Error' 
+      });
     }
 
     const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Pas de réponse';
     return res.status(200).json({ reply });
+
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
