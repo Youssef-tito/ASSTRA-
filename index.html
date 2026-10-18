@@ -300,7 +300,7 @@ button:focus-visible, textarea:focus-visible {
       <div class="header-left">
         <button class="menu-btn" id="menuBtn" aria-label="Ouvrir le menu">☰</button>
         <div class="header-title">ASSTRA AI</div>
-        <span class="model-label">Gemini 3.8 Flash 🚀</span>
+        <span class="model-label">Gemini 1.5 Flash ⚡</span>
       </div>
       <div class="online"><span class="dot"></span> Prêt à vous aider</div>
     </header>
@@ -619,11 +619,10 @@ function imageToPart(dataUrl) {
   };
 }
 
-// تفعيل التسجيل الصوتي (Voice Input)
 if (micBtn && ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   recognition = new SpeechRecognition();
-  recognition.lang = 'ar-TN'; // يقبل التونسية، العربية والفرنسية
+  recognition.lang = 'ar-TN';
   recognition.interimResults = false;
 
   micBtn.onclick = () => {
@@ -700,7 +699,6 @@ async function sendMessage() {
   let text = userInput.value.trim();
   if (!text && !selectedImage) return;
 
-  // فحص إذا طلب المستخدم إنشاء صورة (Image Generation)
   const lowerText = text.toLowerCase();
   if (lowerText.includes("انشئ صورة") || lowerText.includes("crée une image") || lowerText.includes("génère une image") || lowerText.includes("رسم لي")) {
     let c = getActive();
