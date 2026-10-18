@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -213,8 +212,16 @@ button:focus-visible, textarea:focus-visible {
 .icon-btn {
   width: 38px; height: 38px; flex-shrink: 0;
   border: 0; border-radius: 11px; background: #f3f0ff;
-  color: var(--primary); font-size: 23px;
+  color: var(--primary); font-size: 20px;
+  display: grid; place-items: center; transition: .2s;
 }
+.icon-btn:hover { background: #e8e3ff; }
+.icon-btn.recording {
+  background: #e54865; color: white;
+  animation: pulse 1s infinite;
+}
+@keyframes pulse { 50% { box-shadow: 0 0 0 5px #e5486525; } }
+
 .composer textarea {
   flex: 1; min-width: 0; max-height: 150px; resize: none;
   padding: 10px 3px; border: 0; outline: 0;
@@ -293,7 +300,7 @@ button:focus-visible, textarea:focus-visible {
       <div class="header-left">
         <button class="menu-btn" id="menuBtn" aria-label="Ouvrir le menu">☰</button>
         <div class="header-title">ASSTRA AI</div>
-        <span class="model-label">Assistant IA</span>
+        <span class="model-label">Gemini 3.8 Flash 🚀</span>
       </div>
       <div class="online"><span class="dot"></span> Prêt à vous aider</div>
     </header>
@@ -308,9 +315,10 @@ button:focus-visible, textarea:focus-visible {
           <button class="remove-image" id="removeImageBtn" aria-label="Retirer l'image">×</button>
         </div>
         <div class="composer">
+          <button class="icon-btn" id="micBtn" title="Enregistrement vocal" aria-label="Parler">🎙️</button>
           <button class="icon-btn" id="imageBtn" title="Ajouter une image" aria-label="Ajouter une image">＋</button>
           <input type="file" id="imageInput" accept="image/jpeg,image/png,image/webp" hidden>
-          <textarea id="userInput" rows="1" maxlength="20000" placeholder="Écrivez votre message..." aria-label="Votre message"></textarea>
+          <textarea id="userInput" rows="1" maxlength="20000" placeholder="Écrivez votre message ou parlez... 💬" aria-label="Votre message"></textarea>
           <button class="send-btn" id="sendBtn" aria-label="Envoyer">↑</button>
         </div>
         <div class="disclaimer">ASSTRA AI peut faire des erreurs. Vérifiez les informations importantes.</div>
@@ -322,13 +330,14 @@ button:focus-visible, textarea:focus-visible {
 <script>
 "use strict";
 
-const STORAGE_KEY = "asstra_ai_conversations_v4";
+const STORAGE_KEY = "asstra_ai_conversations_v5";
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 let conversations = [];
 let activeConversationId = null;
 let selectedImage = null;
 let isSending = false;
 let requestController = null;
+let recognition = null;
 
 try {
   const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
@@ -351,6 +360,7 @@ const imagePreview = $("imagePreview");
 const previewImg = $("previewImg");
 const sidebar = $("sidebar");
 const overlay = $("overlay");
+const micBtn = $("micBtn");
 
 function makeId() {
   return window.crypto && crypto.randomUUID
@@ -478,27 +488,27 @@ function addWelcome() {
         <circle cx="36" cy="10" r="3" fill="#DDD6FE"/>
       </svg>
     </div>
-    <h1>Bonjour, bienvenue sur<br><span class="gradient-text">ASSTRA AI</span></h1>
+    <h1>Bonjour, bienvenue sur<br><span class="gradient-text">ASSTRA AI</span> 🌟</h1>
     <p>Votre espace intelligent pour apprendre, créer, résoudre des problèmes et explorer de nouvelles idées.</p>
     <div class="suggestions">
-      <button class="suggestion" data-prompt="Aide-moi à trouver des idées créatives pour un projet.">
+      <button class="suggestion" data-prompt="Aide-moi à trouver des idées créatives pour un projet. 💡">
         <div class="suggestion-icon">✧</div>
-        <div class="suggestion-title">Créativité et idées</div>
+        <div class="suggestion-title">Créativité et idées 💡</div>
         <div class="suggestion-sub">Trouver l'inspiration pour un projet</div>
       </button>
-      <button class="suggestion" data-prompt="Explique-moi un concept informatique simplement, étape par étape.">
+      <button class="suggestion" data-prompt="Explique-moi un concept informatique simplement, étape par étape. 💻">
         <div class="suggestion-icon">⌘</div>
-        <div class="suggestion-title">Programmation</div>
+        <div class="suggestion-title">Programmation 💻</div>
         <div class="suggestion-sub">Comprendre et écrire du code</div>
       </button>
-      <button class="suggestion" data-prompt="Donne-moi une méthode simple pour mieux apprendre et réviser.">
+      <button class="suggestion" data-prompt="Donne-moi une méthode simple pour mieux apprendre et réviser. 📚">
         <div class="suggestion-icon">✎</div>
-        <div class="suggestion-title">Apprentissage</div>
+        <div class="suggestion-title">Apprentissage 📚</div>
         <div class="suggestion-sub">Réviser et mieux comprendre</div>
       </button>
-      <button class="suggestion" data-prompt="Je veux analyser une image. Explique-moi comment tu peux m'aider.">
+      <button class="suggestion" data-prompt="Je veux analyser une image. Explique-moi comment tu peux m'aider. 🖼️">
         <div class="suggestion-icon">▧</div>
-        <div class="suggestion-title">Images et analyse</div>
+        <div class="suggestion-title">Images et analyse 🖼️</div>
         <div class="suggestion-sub">Comprendre une photo ou un document</div>
       </button>
     </div>`;
@@ -609,6 +619,35 @@ function imageToPart(dataUrl) {
   };
 }
 
+// تفعيل التسجيل الصوتي (Voice Input)
+if (micBtn && ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SpeechRecognition();
+  recognition.lang = 'ar-TN'; // يقبل التونسية، العربية والفرنسية
+  recognition.interimResults = false;
+
+  micBtn.onclick = () => {
+    try {
+      recognition.start();
+      micBtn.classList.add("recording");
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  recognition.onresult = (event) => {
+    const speechToText = event.results[0][0].transcript;
+    userInput.value += (userInput.value ? " " : "") + speechToText;
+    resizeInput();
+    micBtn.classList.remove("recording");
+  };
+
+  recognition.onerror = () => micBtn.classList.remove("recording");
+  recognition.onend = () => micBtn.classList.remove("recording");
+} else if (micBtn) {
+  micBtn.style.display = "none";
+}
+
 $("newChatBtn").addEventListener("click", newConversation);
 $("menuBtn").addEventListener("click", () => {
   sidebar.classList.add("open");
@@ -658,8 +697,41 @@ sendBtn.addEventListener("click", sendMessage);
 async function sendMessage() {
   if (isSending) return;
 
-  const text = userInput.value.trim();
+  let text = userInput.value.trim();
   if (!text && !selectedImage) return;
+
+  // فحص إذا طلب المستخدم إنشاء صورة (Image Generation)
+  const lowerText = text.toLowerCase();
+  if (lowerText.includes("انشئ صورة") || lowerText.includes("crée une image") || lowerText.includes("génère une image") || lowerText.includes("رسم لي")) {
+    let c = getActive();
+    if (!c) {
+      c = { id: makeId(), title: "Nouvelle discussion", messages: [], updatedAt: Date.now() };
+      conversations.unshift(c);
+      activeConversationId = c.id;
+    }
+    const userMessage = { role: "user", text, image: null };
+    c.messages.push(userMessage);
+    if (c.messages.length === 1) c.title = text.slice(0, 42);
+    
+    userInput.value = "";
+    userInput.style.height = "auto";
+    saveAndRender();
+
+    showTyping();
+    setTimeout(() => {
+      removeTyping();
+      const promptClean = encodeURIComponent(text);
+      const generatedImageUrl = `https://image.pollinations.ai/prompt/${promptClean}`;
+      c.messages.push({
+        role: "model",
+        text: "✨ **إليك الصورة التي طلبتها :**",
+        image: generatedImageUrl
+      });
+      c.updatedAt = Date.now();
+      saveAndRender();
+    }, 1200);
+    return;
+  }
 
   let c = getActive();
   if (!c) {
@@ -706,6 +778,7 @@ async function sendMessage() {
   sendBtn.disabled = true;
   $("imageBtn").disabled = true;
   $("newChatBtn").disabled = true;
+  if (micBtn) micBtn.disabled = true;
   showTyping();
 
   const contents = previousMessages.map(m => {
@@ -769,6 +842,7 @@ async function sendMessage() {
     sendBtn.disabled = false;
     $("imageBtn").disabled = false;
     $("newChatBtn").disabled = false;
+    if (micBtn) micBtn.disabled = false;
     c.updatedAt = Date.now();
 
     conversations.sort((a, b) => b.updatedAt - a.updatedAt);
