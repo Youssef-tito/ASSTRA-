@@ -150,7 +150,7 @@ module.exports = async function handler(req, res) {
      * Gemini API configuration.
      * Keep GEMINI_API_KEY on the server only.
      */
-    const model = "gemini-3.8-flash";
+    const model = "gemini-1.5-flash";
 
     const apiUrl =
       "https://generativelanguage.googleapis.com/v1beta/models/" +
