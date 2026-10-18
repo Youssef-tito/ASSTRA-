@@ -19,7 +19,8 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'GEMINI_API_KEY is missing' });
     }
 
-    const response = await fetch(
+    // جرب موديل gemini-1.5-flash الرابط المباشر الصحيح
+    let response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
       {
         method: 'POST',
@@ -30,7 +31,22 @@ export default async function handler(req, res) {
       }
     );
 
-    const data = await response.json();
+    let data = await response.json();
+
+    // إذا فشل الموديل الأول، يحول تلقائياً على الموديل الثاني بدون خطأ
+    if (!response.ok) {
+      response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt || 'Hello' }] }]
+          })
+        }
+      );
+      data = await response.json();
+    }
 
     if (!response.ok) {
       return res.status(response.status).json({ error: data.error?.message || 'Gemini API Error' });
