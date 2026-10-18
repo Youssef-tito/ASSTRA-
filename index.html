@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>ASSTRA AI - Assistant Intelligent</title>
   <meta name="theme-color" content="#ffffff">
   <meta name="description" content="ASSTRA AI - Votre assistant intelligent.">
@@ -12,54 +12,76 @@
     :root {
       --primary: #6657f5;
       --primary-dark: #5141df;
-      --purple: #a855f7;
       --background: #f8f9fd;
       --white: #ffffff;
       --text: #20243a;
       --muted: #8b90a5;
       --border: #e9eaf2;
-      --sidebar-width: 270px;
+      --sidebar-width: 260px;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: "Segoe UI", Arial, sans-serif; background: var(--background); color: var(--text); height: 100dvh; overflow: hidden; }
     button, input, textarea { font: inherit; }
     button { cursor: pointer; }
-    .app { display: flex; width: 100%; height: 100dvh; }
-    .sidebar { width: var(--sidebar-width); flex-shrink: 0; background: var(--white); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px 16px; z-index: 20; }
-    .brand { display: flex; align-items: center; gap: 11px; padding: 2px 4px; margin-bottom: 30px; }
-    .brand-logo { width: 42px; height: 42px; border-radius: 13px; background: linear-gradient(135deg, #6657f5, #a855f7); display: flex; align-items: center; justify-content: center; color: white; font-size: 23px; }
-    .brand-name { font-size: 19px; font-weight: 800; background: linear-gradient(135deg, #6657f5, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .new-chat-btn { width: 100%; border: 0; padding: 13px; border-radius: 12px; background: linear-gradient(135deg, #6657f5, #7665fa); color: white; font-size: 14px; font-weight: 650; display: flex; align-items: center; justify-content: center; gap: 9px; }
-    .history-title { margin: 29px 8px 12px; color: var(--muted); font-size: 11px; font-weight: 750; text-transform: uppercase; }
-    .history-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 5px; }
-    .history-item { display: flex; align-items: center; gap: 8px; padding: 11px 10px; border-radius: 10px; color: #646981; font-size: 13px; cursor: pointer; }
+    
+    .app { display: flex; width: 100%; height: 100dvh; position: relative; overflow: hidden; }
+    
+    /* SIDEBAR */
+    .sidebar { width: var(--sidebar-width); flex-shrink: 0; background: var(--white); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 15px; z-index: 30; transition: transform 0.3s ease; height: 100%; }
+    .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+    .brand-logo { width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, #6657f5, #a855f7); display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; }
+    .brand-name { font-size: 17px; font-weight: 800; background: linear-gradient(135deg, #6657f5, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .new-chat-btn { width: 100%; border: 0; padding: 11px; border-radius: 10px; background: linear-gradient(135deg, #6657f5, #7665fa); color: white; font-size: 13px; font-weight: 650; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .history-title { margin: 20px 5px 10px; color: var(--muted); font-size: 10px; font-weight: 750; text-transform: uppercase; }
+    .history-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
+    .history-item { display: flex; align-items: center; gap: 8px; padding: 10px 8px; border-radius: 8px; color: #646981; font-size: 12px; cursor: pointer; }
     .history-item:hover { background: #f5f4ff; }
     .history-item.active { background: #efedff; color: var(--primary-dark); }
     .history-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .delete-chat { border: 0; background: transparent; color: #9296a9; font-size: 16px; }
-    .main { flex: 1; display: flex; flex-direction: column; height: 100%; min-width: 0; }
-    .header { height: 68px; display: flex; align-items: center; gap: 13px; padding: 0 24px; background: white; border-bottom: 1px solid var(--border); }
-    .chat-messages { flex: 1; overflow-y: auto; padding: 30px 20px; display: flex; flex-direction: column; gap: 23px; }
-    .message-row { display: flex; align-items: flex-start; gap: 11px; max-width: 850px; width: 100%; margin: 0 auto; }
+
+    /* MAIN */
+    .main { flex: 1; display: flex; flex-direction: column; height: 100%; min-width: 0; background: var(--background); }
+    .header { height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; background: white; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    .menu-btn { background: #f4f3ff; border: 0; color: var(--primary); width: 36px; height: 36px; border-radius: 8px; font-size: 18px; display: none; align-items: center; justify-content: center; }
+    
+    .chat-messages { flex: 1; overflow-y: auto; padding: 20px 15px; display: flex; flex-direction: column; gap: 16px; }
+    .message-row { display: flex; align-items: flex-start; gap: 8px; width: 100%; }
     .message-row.user-row { justify-content: flex-end; }
-    .avatar { width: 34px; height: 34px; border-radius: 11px; display: grid; place-items: center; font-size: 17px; flex-shrink: 0; }
+    .avatar { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; font-size: 14px; flex-shrink: 0; }
     .assistant-avatar { color: white; background: linear-gradient(135deg, #6657f5, #a855f7); }
     .user-avatar { background: #eeecff; }
-    .message { max-width: calc(100% - 45px); padding: 14px 17px; border-radius: 15px; font-size: 14px; line-height: 1.8; overflow-wrap: anywhere; }
-    .message.user { background: linear-gradient(135deg, #6657f5, #7465f7); color: white; border-bottom-right-radius: 4px; }
-    .message.assistant { background: white; border: 1px solid var(--border); border-bottom-left-radius: 4px; }
-    .message-image { display: block; max-width: 240px; max-height: 240px; object-fit: contain; margin-top: 8px; border-radius: 10px; }
-    .image-preview { display: none; align-items: center; gap: 12px; padding: 10px 20px; background: #f1efff; border-top: 1px solid #e6e1ff; }
-    .image-preview img { width: 47px; height: 47px; border-radius: 9px; object-fit: cover; }
-    .composer-area { background: white; border-top: 1px solid var(--border); padding: 16px 20px 12px; }
-    .composer { width: min(900px, 100%); margin: 0 auto; display: flex; align-items: flex-end; gap: 9px; padding: 9px; border: 1px solid #dedff0; border-radius: 17px; background: white; }
-    .composer textarea { flex: 1; resize: none; border: 0; outline: 0; padding: 10px 3px; font-size: 14px; background: transparent; }
-    .send-btn { height: 40px; padding: 0 17px; border: 0; border-radius: 11px; background: linear-gradient(135deg, #6657f5, #7665fa); color: white; font-weight: 700; }
+    .message { max-width: calc(100% - 40px); padding: 12px 14px; border-radius: 12px; font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }
+    .message.user { background: linear-gradient(135deg, #6657f5, #7465f7); color: white; border-bottom-right-radius: 2px; }
+    .message.assistant { background: white; border: 1px solid var(--border); border-bottom-left-radius: 2px; }
+    .message-image { display: block; max-width: 200px; max-height: 200px; object-fit: contain; margin-top: 6px; border-radius: 8px; }
+
+    /* IMAGE PREVIEW */
+    .image-preview { display: none; align-items: center; gap: 10px; padding: 8px 15px; background: #f1efff; border-top: 1px solid #e6e1ff; }
+    .image-preview img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
+    .remove-image { border: 0; background: white; width: 26px; height: 26px; border-radius: 6px; color: #dc4965; font-size: 15px; cursor: pointer; }
+
+    /* COMPOSER */
+    .composer-area { background: white; border-top: 1px solid var(--border); padding: 10px 12px; flex-shrink: 0; }
+    .composer { width: 100%; display: flex; align-items: flex-end; gap: 8px; padding: 6px 10px; border: 1px solid #dedff0; border-radius: 14px; background: white; }
+    .icon-btn { background: transparent; border: 0; font-size: 18px; cursor: pointer; padding: 5px; color: #777c94; }
+    .composer textarea { flex: 1; resize: none; border: 0; outline: 0; padding: 6px 2px; font-size: 13px; background: transparent; max-height: 120px; }
+    .send-btn { height: 36px; padding: 0 12px; border: 0; border-radius: 9px; background: linear-gradient(135deg, #6657f5, #7665fa); color: white; font-weight: 700; font-size: 12px; flex-shrink: 0; }
+
+    .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 25; }
+
+    /* MOBILE RESPONSIVE FIX */
+    @media (max-width: 768px) {
+      .sidebar { position: fixed; top: 0; bottom: 0; left: 0; transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .menu-btn { display: flex; }
+      .overlay.open { display: block; }
+    }
   </style>
 </head>
 <body>
 <div class="app">
-  <aside class="sidebar">
+  <div class="overlay" id="overlay"></div>
+  <aside class="sidebar" id="sidebar">
     <div class="brand">
       <div class="brand-logo">✨</div>
       <div class="brand-name">ASSTRA AI</div>
@@ -68,16 +90,22 @@
     <div class="history-title">Discussions récentes</div>
     <div class="history-list" id="historyList"></div>
   </aside>
+
   <main class="main">
     <header class="header">
+      <button class="menu-btn" id="menuBtn">☰</button>
       <strong>ASSTRA AI Assistant</strong>
+      <div style="width: 36px;"></div>
     </header>
+
     <section class="chat-messages" id="chatMessages"></section>
+
     <div class="image-preview" id="imagePreview">
       <img id="previewImg" alt="Aperçu">
-      <div class="image-preview-info"><strong id="previewName">Image prête</strong></div>
+      <div style="flex:1; font-size:12px; color:#5c4cda;"><strong>Image prête</strong></div>
       <button class="remove-image" id="removeImageBtn">×</button>
     </div>
+
     <footer class="composer-area">
       <div class="composer">
         <button class="icon-btn" id="imageBtn">📷</button>
@@ -88,6 +116,7 @@
     </footer>
   </main>
 </div>
+
 <script>
   const STORAGE_KEY = "asstra_ai_conversations_v3";
   let conversations = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
@@ -104,6 +133,12 @@
   const imagePreview = document.getElementById("imagePreview");
   const previewImg = document.getElementById("previewImg");
   const removeImageBtn = document.getElementById("removeImageBtn");
+  const menuBtn = document.getElementById("menuBtn");
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("overlay");
+
+  menuBtn.onclick = () => { sidebar.classList.add("open"); overlay.classList.add("open"); };
+  overlay.onclick = () => { sidebar.classList.remove("open"); overlay.classList.remove("open"); };
 
   if (conversations.length === 0) createConversation();
   else openConversation(conversations[0].id);
@@ -118,6 +153,8 @@
   function openConversation(id) {
     activeConversationId = id;
     clearImage();
+    sidebar.classList.remove("open");
+    overlay.classList.remove("open");
     saveAndRender();
   }
 
@@ -126,11 +163,7 @@
   }
 
   function saveAndRender() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(conversations));
-    } catch {
-      alert("Stockage local plein. Supprimez d'anciennes discussions.");
-    }
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(conversations)); } catch {}
     renderHistory();
     renderChat();
   }
@@ -150,7 +183,7 @@
     chatMessages.replaceChildren();
     const c = getActive();
     if (!c || c.messages.length === 0) {
-      chatMessages.innerHTML = `<div style="text-align:center;margin:auto;"><h1>Bienvenue sur <span>ASSTRA AI</span></h1><p>Posez vos questions ou envoyez une photo !</p></div>`;
+      chatMessages.innerHTML = `<div style="text-align:center; margin:auto; padding:20px;"><h1>Bienvenue sur <span style="color:#6657f5;">ASSTRA AI</span></h1><p style="color:#8b90a5; font-size:13px; margin-top:8px;">Posez vos questions ou envoyez une photo !</p></div>`;
       return;
     }
     c.messages.forEach(m => {
@@ -205,7 +238,6 @@
     isSending = true;
     sendBtn.disabled = true;
 
-    // تجهيز الهستوري للباك إند بدون تكرار الصور الثقيلة
     const historyPayload = c.messages.slice(0, -1).map(m => ({
       role: m.role,
       parts: [{ text: m.text || "" }]
