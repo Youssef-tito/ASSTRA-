@@ -61,7 +61,6 @@ module.exports = async function handler(req, res) {
     if (imagePart) currentParts.push(imagePart);
     contents.push({ role: "user", parts: currentParts });
 
-    // تم التحديث إلى الموديل المتوافق مع حسابك الجديد
     const model = "gemini-3.8-flash";
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey.trim()}`;
 
@@ -75,8 +74,12 @@ module.exports = async function handler(req, res) {
         headers: { "Content-Type": "application/json" },
         signal: controller.signal,
         body: JSON.stringify({
+          // فرض استعمال الـ Emojis والأسلوب التفاعلي
+          systemInstruction: {
+            parts: [{ text: "Tu es ASSTRA AI, un assistant très amical, expressif et dynamique. Tu DOIS TOUJOURS utiliser beaucoup d'emojis pertinents et amusants (✨, 🚀, 😎, 🔥, 💡, 🎉, etc.) dans CHAQUE réponse, quelle que soit la langue de l'utilisateur !" }]
+          },
           contents,
-          generationConfig: { temperature: 0.7, maxOutputTokens: 4096 }
+          generationConfig: { temperature: 0.8, maxOutputTokens: 4096 }
         })
       });
     } finally {
