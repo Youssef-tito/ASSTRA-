@@ -1,181 +1,105 @@
 <!DOCTYPE html>
-<html lang="fr" dir="ltr">
+<html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ASSTRA AI — Your intelligence, amplified</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ASSTRA AI</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { display: flex; height: 100vh; background-color: #f7f9fc; color: #333; }
+    
+    /* Sidebar */
+    .sidebar { width: 260px; background-color: #ffffff; border-right: 1px solid #e1e8ed; display: flex; flex-direction: column; padding: 20px; }
+    .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 25px; }
+    .brand img { width: 38px; height: 38px; border-radius: 10px; object-fit: cover; }
+    .brand h2 { color: #6c5ce7; font-size: 22px; font-weight: 700; }
+    .btn-new { background-color: #6c5ce7; color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
+    .btn-new:hover { background-color: #5b4bc4; }
 
-<style>
-:root {
-  --bg: #ffffff;
-  --panel: #f8fafc;
-  --line: #e2e8f0;
-  --purple: #7c3aed;
-  --purple2: #6d28d9;
-  --purple-light: #f3e8ff;
-  --text: #0f172a;
-  --muted: #64748b;
-}
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  background: radial-gradient(ellipse at 50% -20%, #f3e8ff 0%, transparent 50%), var(--bg);
-  color: var(--text);
-  font: 15px/1.5 Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif;
-  height: 100vh;
-  overflow: hidden;
-}
-button, textarea { font: inherit; }
-button { cursor: pointer; }
-.app {
-  height: 100vh;
-  display: grid;
-  grid-template-columns: 280px 1fr;
-  max-width: 1800px;
-  margin: auto;
-}
-.sidebar {
-  background: #fcfcfd;
-  border-right: 1px solid var(--line);
-  padding: 20px 14px;
-  display: flex;
-  flex-direction: column;
-}
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 5px 8px 22px;
-  border-bottom: 1px solid var(--line);
-}
-.logo { width: 40px; height: 40px; }
-.brand-name { font-weight: 900; letter-spacing: 2px; font-size: 17px; color: var(--purple2); }
-.new-chat {
-  margin: 19px 0 23px;
-  border: 1px solid var(--purple);
-  background: linear-gradient(110deg, var(--purple), var(--purple2));
-  color: white;
-  border-radius: 13px;
-  padding: 12px 14px;
-  font-weight: 700;
-}
-.main { display: flex; flex-direction: column; position: relative; background: var(--bg); }
-.topbar {
-  height: 68px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 27px;
-  border-bottom: 1px solid var(--line);
-}
-.messages { flex: 1; overflow: auto; padding: 35px 22px; }
-.inner { max-width: 850px; margin: 0 auto; }
-.message { display: flex; gap: 12px; margin-bottom: 24px; }
-.bubble {
-  max-width: calc(100% - 45px);
-  padding: 14px 16px;
-  border: 1px solid var(--line);
-  background: var(--panel);
-  border-radius: 4px 16px 16px 16px;
-}
-.message.user { flex-direction: row-reverse; }
-.message.user .bubble {
-  background: linear-gradient(110deg, var(--purple), var(--purple2));
-  color: white;
-  border: none;
-  border-radius: 16px 4px 16px 16px;
-}
-.composer-wrap { padding: 14px 22px 19px; border-top: 1px solid var(--line); }
-.composer {
-  max-width: 850px;
-  margin: auto;
-  border: 1px solid #cbd5e1;
-  border-radius: 20px;
-  padding: 10px;
-  display: flex;
-  gap: 10px;
-}
-textarea { flex: 1; border: 0; outline: 0; resize: none; height: 40px; }
-.send {
-  border: 0;
-  border-radius: 11px;
-  background: linear-gradient(110deg, var(--purple), var(--purple2));
-  color: white;
-  padding: 0 20px;
-  font-weight: 800;
-}
-</style>
+    /* Main Chat */
+    .main { flex: 1; display: flex; flex-direction: column; }
+    .header { height: 60px; border-bottom: 1px solid #e1e8ed; display: flex; align-items: center; padding: 0 25px; background: #fff; font-weight: 600; font-size: 16px; }
+    .chat-box { flex: 1; padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+    
+    /* Messages */
+    .msg { max-width: 70%; padding: 14px 18px; border-radius: 12px; line-height: 1.5; font-size: 15px; }
+    .msg.user { background-color: #6c5ce7; color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+    .msg.bot { background-color: #ffffff; color: #2d3436; align-self: flex-start; border: 1px solid #e1e8ed; border-bottom-left-radius: 2px; }
+    
+    /* Input Area */
+    .input-container { padding: 20px; background-color: #ffffff; border-top: 1px solid #e1e8ed; display: flex; gap: 12px; }
+    .input-container input { flex: 1; padding: 14px; border: 1px solid #dfe6e9; border-radius: 10px; outline: none; font-size: 15px; }
+    .input-container input:focus { border-color: #6c5ce7; }
+    .input-container button { background-color: #6c5ce7; color: white; border: none; padding: 0 25px; border-radius: 10px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+    .input-container button:hover { background-color: #5b4bc4; }
+  </style>
 </head>
 <body>
-<div class="app">
-  <aside class="sidebar">
+
+  <div class="sidebar">
     <div class="brand">
-      <div class="brand-name">ASSTRA AI</div>
+      <!-- يمكنك وضع رابط صورة اللوجو الخاصة بك مكان logo.png -->
+      <img src="logo.png" onerror="this.src='https://via.placeholder.com/40/6c5ce7/ffffff?text=AI'" alt="Logo" />
+      <h2>ASSTRA AI</h2>
     </div>
-    <button class="new-chat" onclick="location.reload()">＋ Nouvelle discussion</button>
-  </aside>
-  <main class="main">
-    <header class="topbar">
-      <div><b>ASSTRA AI Assistant</b></div>
-    </header>
-    <section class="messages">
-      <div class="inner" id="stream"></div>
-    </section>
-    <div class="composer-wrap">
-      <form class="composer" id="chatForm">
-        <textarea id="prompt" placeholder="Écris ta question ici..."></textarea>
-        <button class="send" type="submit">Envoyer ↗</button>
-      </form>
+    <button class="btn-new" onclick="location.reload()">+ Nouvelle discussion</button>
+  </div>
+
+  <div class="main">
+    <div class="header">ASSTRA AI Assistant</div>
+    <div class="chat-box" id="chatBox">
+      <div class="msg bot">Bonjour ! Comment puis-je vous aider aujourd'hui ?</div>
     </div>
-  </main>
-</div>
+    <div class="input-container">
+      <input type="text" id="userInput" placeholder="Écris ta question ici..." onkeypress="if(event.key==='Enter') sendMessage()" />
+      <button onclick="sendMessage()">Envoyer 🚀</button>
+    </div>
+  </div>
 
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script>
-const promptBox = document.getElementById('prompt');
-const stream = document.getElementById('stream');
+  <script>
+    async function sendMessage() {
+      const input = document.getElementById('userInput');
+      const chatBox = document.getElementById('chatBox');
+      const text = input.value.trim();
 
-function drawMessage(role, text) {
-  const row = document.createElement('div');
-  row.className = 'message ' + (role === 'user' ? 'user' : 'ai');
-  const bubble = document.createElement('div');
-  bubble.className = 'bubble';
-  if (role === 'user') {
-    bubble.textContent = text;
-  } else {
-    bubble.innerHTML = marked.parse(text);
-  }
-  row.append(bubble);
-  stream.append(row);
-  return row;
-}
+      if (!text) return;
 
-document.getElementById('chatForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const text = promptBox.value.trim();
-  if (!text) return;
+      // أضف رسالة المستخدم
+      const userMsg = document.createElement('div');
+      userMsg.className = 'msg user';
+      userMsg.textContent = text;
+      chatBox.appendChild(userMsg);
 
-  drawMessage('user', text);
-  promptBox.value = '';
+      input.value = '';
+      chatBox.scrollTop = chatBox.scrollHeight;
 
-  const loading = drawMessage('model', 'ASSTRA AI réfléchit...');
+      // أضف مؤشر الانتظار
+      const botMsg = document.createElement('div');
+      botMsg.className = 'msg bot';
+      botMsg.textContent = 'Réflexion en cours...';
+      chatBox.appendChild(botMsg);
+      chatBox.scrollTop = chatBox.scrollHeight;
 
-  try {
-    const res = await fetch('/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt: text })
-    });
-    const data = await res.json();
-    loading.remove();
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt: text })
+        });
 
-    if (!res.ok) throw new Error(data.error || 'Erreur API');
-    drawMessage('model', data.reply);
-  } catch (err) {
-    loading.remove();
-    drawMessage('model', 'Erreur: ' + err.message);
-  }
-});
-</script>
+        const data = await res.json();
+        if (data.reply) {
+          botMsg.textContent = data.reply;
+        } else {
+          botMsg.textContent = "Erreur: " + (data.error || "Impossible de répondre.");
+        }
+      } catch (err) {
+        botMsg.textContent = "Erreur de connexion avec le serveur.";
+      }
+      
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+  </script>
+
 </body>
 </html>
