@@ -192,7 +192,7 @@ module.exports = async function handler(req, res) {
     // Gemini API
     // Si ce modèle n'est pas disponible pour votre clé,
     // vérifiez les modèles autorisés dans votre projet Google AI.
-    const model = "gemini-2.5-flash";
+    const model = "gemini-3.8-flash";
 
     const apiUrl =
       "https://generativelanguage.googleapis.com/v1beta/models/" +
