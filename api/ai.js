@@ -74,12 +74,12 @@ module.exports = async function handler(req, res) {
         headers: { "Content-Type": "application/json" },
         signal: controller.signal,
         body: JSON.stringify({
-          // فرض استعمال الـ Emojis والأسلوب التفاعلي
+          // أسلوب متوازن: إيموجي أو اثنين فقط وبشكل طبيعي
           systemInstruction: {
-            parts: [{ text: "Tu es ASSTRA AI, un assistant très amical, expressif et dynamique. Tu DOIS TOUJOURS utiliser beaucoup d'emojis pertinents et amusants (✨, 🚀, 😎, 🔥, 💡, 🎉, etc.) dans CHAQUE réponse, quelle que soit la langue de l'utilisateur !" }]
+            parts: [{ text: "Tu es ASSTRA AI, un assistant intelligent, naturel et sympathique. Utilise uniquement 1 ou 2 emojis pertinents par réponse pour garder un ton dynamique mais professionnel et propre. Évite l'excès d'emojis." }]
           },
           contents,
-          generationConfig: { temperature: 0.8, maxOutputTokens: 4096 }
+          generationConfig: { temperature: 0.7, maxOutputTokens: 4096 }
         })
       });
     } finally {
