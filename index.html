@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="auto">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -12,29 +12,30 @@
     .sidebar { width: 280px; background-color: #ffffff; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; padding: 24px; justify-content: space-between; }
     .brand { display: flex; align-items: center; gap: 14px; margin-bottom: 30px; }
     
+    /* Logo Premium ASSTRA AI */
     .logo-container {
-      width: 44px;
-      height: 44px;
-      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
-      border-radius: 12px;
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #7c3aed 0%, #2563eb 50%, #06b6d4 100%);
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
+      box-shadow: 0 10px 20px -5px rgba(124, 58, 237, 0.4);
     }
-    .logo-container svg { width: 26px; height: 26px; fill: white; }
+    .logo-container svg { width: 28px; height: 28px; fill: white; }
 
     .brand h2 { 
       font-size: 22px; 
       font-weight: 800; 
-      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      background: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       letter-spacing: -0.5px;
     }
 
     .btn-new { 
-      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); 
+      background: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%); 
       color: white; 
       border: none; 
       padding: 14px; 
@@ -46,10 +47,10 @@
       align-items: center; 
       justify-content: center; 
       gap: 10px; 
-      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25);
       transition: all 0.2s ease;
     }
-    .btn-new:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35); }
+    .btn-new:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(124, 58, 237, 0.35); }
 
     /* Main Area */
     .main { flex: 1; display: flex; flex-direction: column; }
@@ -57,40 +58,77 @@
     .chat-box { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
     
     /* Messages */
-    .msg { max-width: 75%; padding: 16px 20px; border-radius: 16px; line-height: 1.6; font-size: 15px; }
-    .msg.user { 
-      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); 
+    .msg-wrapper { display: flex; flex-direction: column; max-width: 75%; gap: 6px; }
+    .msg-wrapper.user { align-self: flex-end; }
+    .msg-wrapper.bot { align-self: flex-start; }
+
+    .msg { padding: 16px 20px; border-radius: 16px; line-height: 1.6; font-size: 15px; word-break: break-word; }
+    .msg-wrapper.user .msg { 
+      background: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%); 
       color: white; 
-      align-self: flex-end; 
       border-bottom-right-radius: 4px;
-      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.15);
     }
-    .msg.bot { 
+    .msg-wrapper.bot .msg { 
       background-color: #ffffff; 
       color: #1e293b; 
-      align-self: flex-start; 
       border: 1px solid #e2e8f0; 
       border-bottom-left-radius: 4px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
     }
+
+    .audio-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      align-self: flex-start;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    .audio-btn:hover { opacity: 1; }
     
     /* Input Area */
-    .input-container { padding: 24px 30px; background-color: #ffffff; border-top: 1px solid #e2e8f0; display: flex; gap: 14px; }
+    .input-container { padding: 20px 30px; background-color: #ffffff; border-top: 1px solid #e2e8f0; display: flex; gap: 10px; align-items: center; }
     .input-container input { flex: 1; padding: 16px 20px; border: 1.5px solid #cbd5e1; border-radius: 12px; outline: none; font-size: 15px; transition: all 0.2s; }
-    .input-container input:focus { border-color: #6366f1; box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); }
-    .input-container button { 
-      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); 
+    .input-container input:focus { border-color: #7c3aed; box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1); }
+    
+    .icon-btn {
+      background: #f1f5f9;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 12px;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .icon-btn:hover { background: #e2e8f0; }
+    .icon-btn.recording { background: #ef4444; color: white; border-color: #ef4444; animation: pulse 1s infinite; }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .send-btn { 
+      background: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%); 
       color: white; 
       border: none; 
-      padding: 0 28px; 
+      padding: 0 24px; 
+      height: 50px;
       border-radius: 12px; 
       font-weight: 600; 
       font-size: 15px;
       cursor: pointer; 
       transition: all 0.2s;
-      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
     }
-    .input-container button:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(79, 70, 229, 0.3); }
+    .send-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(124, 58, 237, 0.3); }
   </style>
 </head>
 <body>
@@ -99,8 +137,9 @@
     <div>
       <div class="brand">
         <div class="logo-container">
+          <!-- الشعار المطور ASSTRA AI -->
           <svg viewBox="0 0 24 24">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+            <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 14.93V18h-2v-1.07A6 6 0 0 1 6.07 12H5v-2h1.07A6 6 0 0 1 11 5.07V4h2v1.07A6 6 0 0 1 17.93 10H19v2h-1.07A6 6 0 0 1 13 16.93zM12 7a5 5 0 1 0 5 5 5 5 0 0 0-5-5z"/>
           </svg>
         </div>
         <h2>ASSTRA AI</h2>
@@ -110,17 +149,69 @@
   </div>
 
   <div class="main">
-    <div class="header">ASSTRA AI Assistant</div>
+    <div class="header">ASSTRA AI Assistant (Multilingual & Voice Support)</div>
     <div class="chat-box" id="chatBox">
-      <div class="msg bot">Bonjour ! Je suis ASSTRA AI. Comment puis-je vous aider aujourd'hui ?</div>
+      <div class="msg-wrapper bot">
+        <div class="msg">مرحباً! أنا ASSTRA AI. يمكنك التحدث معي بأي لغة تريدها أو إرسال رسائل صوتية 🎙️.</div>
+      </div>
     </div>
     <div class="input-container">
-      <input type="text" id="userInput" placeholder="Écris ta question ici..." onkeypress="if(event.key==='Enter') sendMessage()" />
-      <button onclick="sendMessage()">Envoyer 🚀</button>
+      <button class="icon-btn" id="micBtn" onclick="toggleVoiceInput()" title="إرسال بصوتك">🎙️</button>
+      <input type="text" id="userInput" placeholder="أكتب سؤالك هنا أو تكلم بالميكروفون..." onkeypress="if(event.key==='Enter') sendMessage()" />
+      <button class="send-btn" onclick="sendMessage()">إرسال 🚀</button>
     </div>
   </div>
 
   <script>
+    let recognition;
+    let isRecording = false;
+
+    // إعداد التعرف على الصوت
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        document.getElementById('userInput').value = transcript;
+        stopVoiceInput();
+        sendMessage();
+      };
+
+      recognition.onerror = () => stopVoiceInput();
+      recognition.onend = () => stopVoiceInput();
+    } else {
+      document.getElementById('micBtn').style.display = 'none';
+    }
+
+    function toggleVoiceInput() {
+      if (!recognition) return;
+      if (isRecording) {
+        stopVoiceInput();
+      } else {
+        isRecording = true;
+        document.getElementById('micBtn').classList.add('recording');
+        recognition.start();
+      }
+    }
+
+    function stopVoiceInput() {
+      isRecording = false;
+      document.getElementById('micBtn').classList.remove('recording');
+      if (recognition) recognition.stop();
+    }
+
+    // قراءة الرد بصوت عالي
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
     async function sendMessage() {
       const input = document.getElementById('userInput');
       const chatBox = document.getElementById('chatBox');
@@ -128,18 +219,20 @@
 
       if (!text) return;
 
-      const userMsg = document.createElement('div');
-      userMsg.className = 'msg user';
-      userMsg.textContent = text;
-      chatBox.appendChild(userMsg);
+      // إدراج رسالة المستخدم
+      const userWrapper = document.createElement('div');
+      userWrapper.className = 'msg-wrapper user';
+      userWrapper.innerHTML = `<div class="msg">${text}</div>`;
+      chatBox.appendChild(userWrapper);
 
       input.value = '';
       chatBox.scrollTop = chatBox.scrollHeight;
 
-      const botMsg = document.createElement('div');
-      botMsg.className = 'msg bot';
-      botMsg.textContent = 'Réflexion en cours...';
-      chatBox.appendChild(botMsg);
+      // رسالة الانتظار
+      const botWrapper = document.createElement('div');
+      botWrapper.className = 'msg-wrapper bot';
+      botWrapper.innerHTML = `<div class="msg">جاري التفكير...</div>`;
+      chatBox.appendChild(botWrapper);
       chatBox.scrollTop = chatBox.scrollHeight;
 
       try {
@@ -150,13 +243,14 @@
         });
 
         const data = await res.json();
-        if (data.reply) {
-          botMsg.textContent = data.reply;
-        } else {
-          botMsg.textContent = "Erreur: " + (data.error || "Impossible de répondre.");
-        }
+        const replyText = data.reply || ("خطأ: " + (data.error || "تعذر الحصول على إجابة."));
+
+        botWrapper.innerHTML = `
+          <div class="msg">${replyText}</div>
+          <button class="audio-btn" onclick="speakText(\`${replyText.replace(/`/g, "'")}\`)">🔊 الاستماع للرد</button>
+        `;
       } catch (err) {
-        botMsg.textContent = "Erreur de connexion avec le serveur.";
+        botWrapper.innerHTML = `<div class="msg">خطأ في الاتصال بالسيرفر.</div>`;
       }
       
       chatBox.scrollTop = chatBox.scrollHeight;
